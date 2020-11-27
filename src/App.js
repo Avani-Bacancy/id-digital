@@ -25,8 +25,10 @@ function App() {
     _.debounce((cardNum) => {
       const foundCard =
         cardNum && apiData.find((data) => data.number === Number(cardNum));
-      setCardBalance(foundCard.balance);
-      setAllowedProducts(foundCard.allowedProducts);
+      if (foundCard) {
+        setCardBalance(foundCard.balance);
+        setAllowedProducts(foundCard.allowedProducts);
+      }
       setIsSearching(false);
     }, 200),
   );
@@ -44,9 +46,10 @@ function App() {
     setProducts([
       ...products,
       {
-        product: '',
+        id: '',
+        name: '',
         qty: 1,
-        price: 0,
+        price: '0',
       },
     ]);
   };
@@ -59,20 +62,20 @@ function App() {
   // to count bill
   useEffect(() => {
     const cost = { ...initialBill };
-    products.forEach((product) => {
-      cost.subTotal += product.price * Number(product.qty);
-      if (product.discountCentsPerLitre) {
-        cost.total +=
-          product.price * product.qty -
-          (product.discountCentsPerLitre / 100) * product.qty;
-      }
-      cost.total = cost.subTotal;
-      if (cost.total > cardBalance) {
-        setError({ ...error, total: true, index: 0 });
-      }
-    });
-
-    if (cost.total > cardBalance) {
+    if (products && products.length > 0) {
+      products.forEach((product) => {
+        cost.subTotal += product.price * Number(product.qty);
+        if (product.discountCentsPerLitre) {
+          cost.total +=
+            product.price * product.qty -
+            (product.discountCentsPerLitre / 100) * product.qty;
+        }
+        cost.total = cost.subTotal;
+        if (cost.total > cardBalance) {
+          setError({ ...error, total: true, index: 0 });
+        }
+      });
+    } else if (cost.total > cardBalance) {
       setError({ ...error, total: true, index: 0 });
     }
     setBill({ ...cost });
@@ -132,7 +135,12 @@ function App() {
               error={error}
               handleBlur={handleBlur}
             />
-            <CheckOut bill={bill} products={products} error={error} />
+            <CheckOut
+              bill={bill}
+              products={products}
+              error={error}
+              isBtnDisabled={!(cardBalance > 0 && cardBalance >= bill.total)}
+            />
           </CardContent>
         </Card>
       </Grid>

@@ -16,6 +16,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 const useStyles = makeStyles((theme) => ({
+  card: {
+    marginBottom: theme.spacing(1),
+  },
   container: {
     background: 'white',
   },
@@ -51,7 +54,7 @@ const AddProduct = ({
 }) => {
   const classes = useStyles();
   return (
-    <Card key={product.id}>
+    <Card key={product.id} className={classes.card}>
       <CardContent>
         <Grid container className={classes.container}>
           <Grid item md={4} xs={12} sm={12} className={classes.productItem}>

@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CheckOut = ({ bill, products, error }) => {
+const CheckOut = ({ bill, products, error, isBtnDisabled }) => {
   const classes = useStyles();
   return (
     <Card className={classes.card}>
@@ -68,7 +68,12 @@ const CheckOut = ({ bill, products, error }) => {
             {`$ ${bill.total}`}
           </Grid>
         </Grid>
-        <Button variant="contained" color="primary" className={classes.button}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          disabled={isBtnDisabled}
+        >
           PROCESS NOW
         </Button>
         <FormHelperText className={classes.error}>
@@ -84,5 +89,6 @@ CheckOut.propTypes = {
   bill: PropTypes.object.isRequired,
   products: PropTypes.array.isRequired,
   error: PropTypes.object.isRequired,
+  isBtnDisabled: PropTypes.bool.isRequired,
 };
 export default CheckOut;
